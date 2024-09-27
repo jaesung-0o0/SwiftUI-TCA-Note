@@ -31,6 +31,7 @@
 		CA028FF92ADBD92B0044A2DB /* RecordMeeting.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA028FF82ADBD92B0044A2DB /* RecordMeeting.swift */; };
 		CA028FFB2ADBECEF0044A2DB /* MeetingProgressViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA028FFA2ADBECEF0044A2DB /* MeetingProgressViewStyle.swift */; };
 		CA028FFE2ADBED350044A2DB /* SpeakerArc.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA028FFD2ADBED350044A2DB /* SpeakerArc.swift */; };
+		CAE6E6C02AFA31E500467A1D /* SpeechClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE6E6BF2AFA31E500467A1D /* SpeechClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		CA028FF82ADBD92B0044A2DB /* RecordMeeting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMeeting.swift; sourceTree = "<group>"; };
 		CA028FFA2ADBECEF0044A2DB /* MeetingProgressViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingProgressViewStyle.swift; sourceTree = "<group>"; };
 		CA028FFD2ADBED350044A2DB /* SpeakerArc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerArc.swift; sourceTree = "<group>"; };
+		CAE6E6BF2AFA31E500467A1D /* SpeechClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 				A995E9EE2AA745C500CF469B /* StandupDetailView.swift */,
 				A965D3D52AA0E6D700DDDF21 /* StandupForm.swift */,
 				CA028FF82ADBD92B0044A2DB /* RecordMeeting.swift */,
+				CAE6E6BF2AFA31E500467A1D /* SpeechClient.swift */,
 				CA028FFC2ADBED270044A2DB /* Shape */,
 				A965D3D22AA0E56700DDDF21 /* Style */,
 				A965D3C82AA0E0C400DDDF21 /* Model */,
@@ -345,6 +348,7 @@
 				A965D3C52AA0E01800DDDF21 /* StandupsList.swift in Sources */,
 				A965D39B2AA0DD4500DDDF21 /* StandupsApp.swift in Sources */,
 				A965D3C72AA0E0C000DDDF21 /* Standup.swift in Sources */,
+				CAE6E6C02AFA31E500467A1D /* SpeechClient.swift in Sources */,
 				A995E9EF2AA745C500CF469B /* StandupDetailView.swift in Sources */,
 				A965D3D62AA0E6D700DDDF21 /* StandupForm.swift in Sources */,
 				CA028FF92ADBD92B0044A2DB /* RecordMeeting.swift in Sources */,

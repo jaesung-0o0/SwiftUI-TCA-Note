@@ -54,6 +54,9 @@ struct AppFeature: Reducer {
         }
     }
     
+    @Dependency(\.date.now) var now
+    @Dependency(\.uuid) var uuid
+    
     var body: some ReducerOf<Self> {
         // 액션이 들어오면 먼저 실행
         Scope(
@@ -74,6 +77,33 @@ struct AppFeature: Reducer {
                     
                 case let .deleteStandup(id: id):
                     state.standupsList.standups.remove(id: id)
+                    return .none
+                }
+                
+            case .path(.element(id: let id, action: .recordMeeting(.delegate(let action)))):
+                switch action {
+                case .saveMeeting:
+                    guard let detailID = state.path.ids.dropLast().last else {
+                        XCTFail("Record Meeting이 현재 네비게이션 스택의 마지막 요소이기 때문에 Detail Feature 가 처리되어야 합니다.")
+                        return .none
+                    }
+                    // TODO:
+                    state
+                        .path[id: detailID, case: /Path.State.detail]?
+                        .standup
+                        .meetings
+                        .insert(
+                            Meeting(
+                                id: self.uuid(),
+                                date: self.now,
+                                transcript: "N/A"
+                            ),
+                            at: 0
+                        )
+                    guard let standup = state.path[id: id, case: /Path.State.detail]?.standup else {
+                        return .none
+                    }
+                    state.standupsList.standups[id: standup.id] = standup
                     return .none
                 }
                 
@@ -149,6 +179,24 @@ struct AppView: View {
         store: Store(
             initialState: AppFeature.State(
                 standupsList: StandupsListFeature.State(standups: [.mock])
+            ),
+            reducer: { AppFeature() }
+        )
+    )
+}
+
+#Preview("빠른 회의 종료") {
+    var standup = Standup.mock
+    standup.duration = .seconds(6)
+    
+    return AppView(
+        store: Store(
+            initialState: AppFeature.State(
+                path: StackState([
+                    .detail(StandupDetailFeature.State(standup: standup)),
+                    .recordMeeting(RecordMeetingFeature.State(standup: standup))
+                ]),
+                standupsList: StandupsListFeature.State(standups: [standup])
             ),
             reducer: { AppFeature() }
         )

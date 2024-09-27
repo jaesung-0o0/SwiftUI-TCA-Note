@@ -24,9 +24,17 @@ struct RecordMeetingFeature: Reducer {
         case nextButtonTapped
         case endMeetingButtonTapped
         case timerTicked
+
+        case delegate(Delegate)
+        
+        enum Delegate {
+            case saveMeeting
+        }
     }
     
+    @Dependency(\.dismiss) var dismiss
     @Dependency(\.continuousClock) var clock
+    @Dependency(\.speechClient) var speechClient
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -34,17 +42,20 @@ struct RecordMeetingFeature: Reducer {
             case .onTask:
                 return .run { send in
                     /// `requestAuthorization` 를 swift concurrency 에서 쓸 수 있도록 변형
-                    let status = await withUnsafeContinuation { continuation in
-                        SFSpeechRecognizer.requestAuthorization { status in
-                            continuation.resume(with: .success(status))
-                        }
-                    }
-                    print(status.customDumpDescription)
+                    let status = await self.speechClient.requestAuthorization()
                     for await _ in self.clock.timer(interval: .seconds(1)) {
                         await send(.timerTicked)
                     }
                 }
             case .nextButtonTapped:
+                guard state.speakerIndex < state.standup.attendees.count - 1 else {
+                    // TODO: Alert to end meeting
+                    return .none
+                }
+                state.speakerIndex += 1
+                state.secondsElapsed = state.speakerIndex * Int(
+                    state.standup.durationPerAttendee.components.seconds
+                )
                 return .none
                 
             case .endMeetingButtonTapped:
@@ -52,6 +63,23 @@ struct RecordMeetingFeature: Reducer {
                 
             case .timerTicked:
                 state.secondsElapsed += 1
+                let secondsPerAttendee = Int(
+                    state.standup.durationPerAttendee.components.seconds
+                )
+                if state.secondsElapsed.isMultiple(of: secondsPerAttendee) {
+                    if state.speakerIndex == state.standup.attendees.count - 1 {
+                        // TODO: End meeting
+                        return .run { send in
+                            /// `"어이~ saveMeeting 해줘"`
+                            await send(.delegate(.saveMeeting))
+                            await self.dismiss()
+                        }
+                    }
+                    state.speakerIndex += 1
+                }
+                return .none
+                
+            case .delegate:
                 return .none
             }
         }
